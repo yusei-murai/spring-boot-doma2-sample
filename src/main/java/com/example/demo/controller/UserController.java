@@ -5,6 +5,8 @@ import com.example.demo.entity.User;
 import com.example.demo.entity.UserWithEmails;
 import com.example.demo.dto.UserWithEmailsDto;
 import com.example.demo.dto.CreateUserRequest;
+import com.example.demo.dto.UserOutputDto;
+import com.example.demo.dto.EmailOutputDto;
 import com.example.demo.service.UserAggregateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,17 +45,20 @@ public class UserController {
     }
 
     @GetMapping("/with-emails")
-    public List<User> getUsersWithEmails() {
-        return userDao.selectUserWithEmails();
+    public List<UserOutputDto> getUsersWithEmails() {
+        List<User> users = userDao.selectUserWithEmails();
+        return users.stream()
+            .map(this::convertToOutputDto)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/with-emails")
-    public ResponseEntity<User> getUserWithEmailsById(@PathVariable Long id) {
+    public ResponseEntity<UserOutputDto> getUserWithEmailsById(@PathVariable Long id) {
         List<User> results = userDao.selectUserWithEmailsById(id);
         if (results.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(results.get(0));
+        return ResponseEntity.ok(convertToOutputDto(results.get(0)));
     }
 
     @PostMapping("/with-emails")
@@ -64,6 +69,19 @@ public class UserController {
             request.emailAddresses()
         );
         return ResponseEntity.ok(userAggregate);
+    }
+    
+    private UserOutputDto convertToOutputDto(User user) {
+        List<EmailOutputDto> emailDtos = user.emails().stream()
+            .map(email -> new EmailOutputDto(email.id(), email.mail()))
+            .collect(Collectors.toList());
+        
+        return new UserOutputDto(
+            user.id(),
+            user.name(),
+            user.email(),
+            emailDtos
+        );
     }
 
 }

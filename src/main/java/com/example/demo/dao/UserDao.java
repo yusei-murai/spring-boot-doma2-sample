@@ -3,6 +3,8 @@ package com.example.demo.dao;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Email;
 import com.example.demo.entity.UserWithEmails;
+import com.example.demo.dto.UserOutputDto;
+import com.example.demo.dto.EmailOutputDto;
 import org.seasar.doma.Dao;
 import org.seasar.doma.Insert;
 import org.seasar.doma.Select;
@@ -37,6 +39,7 @@ public interface UserDao {
 
     @Select(aggregateStrategy = UserAggregateStrategy.class)  
     List<User> selectUserWithEmailsById(Long id);
+    
     
     @Insert
     Result<User> insertUser(User user);
