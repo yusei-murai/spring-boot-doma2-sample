@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dao.UserDao;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Email;
+import com.example.demo.dto.CreateUserRequest;
+import com.example.demo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +20,13 @@ public class UserAggregateService {
     @Autowired
     private UserDao userDao;
     
-    public User createUserWithEmails(String name, String email, List<String> emailAddresses) {
-        User insertedUser = insertUserOnly(name, email);
+    @Autowired
+    private UserMapper userMapper;
+    
+    public User createUserWithEmails(CreateUserRequest request) {
+        User insertedUser = insertUserOnly(userMapper.toEntity(request));
         
-        for (String mailAddress : emailAddresses) {
+        for (String mailAddress : request.emailAddresses()) {
             Email emailWithUserId = new Email(
                 null, 
                 insertedUser.id(), 
@@ -35,16 +40,8 @@ public class UserAggregateService {
         return userDao.selectUserWithEmailsById(insertedUser.id()).get(0);
     }
     
-    private User insertUserOnly(String name, String email) {
-        User userToInsert = new User(
-            null, 
-            name, 
-            email, 
-            LocalDateTime.now(), 
-            LocalDateTime.now()
-        );
-        
-        Result<User> result = userDao.insertUser(userToInsert);
+    private User insertUserOnly(User user) {
+        Result<User> result = userDao.insertUser(user);
         if (result.getCount() == 0) {
             throw new RuntimeException("Failed to insert user");
         }

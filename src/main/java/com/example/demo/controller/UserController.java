@@ -63,11 +63,7 @@ public class UserController {
 
     @PostMapping("/with-emails")
     public ResponseEntity<User> createUserWithEmails(@RequestBody CreateUserRequest request) {
-        User userAggregate = userAggregateService.createUserWithEmails(
-            request.name(), 
-            request.email(), 
-            request.emailAddresses()
-        );
+        User userAggregate = userAggregateService.createUserWithEmails(request);
         return ResponseEntity.ok(userAggregate);
     }
     
