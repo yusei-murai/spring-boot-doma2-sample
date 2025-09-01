@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(find:*)",
+      "Bash(mvn clean:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker exec:*)",
+      "Bash(pkill:*)",
+      "Bash(true)"
+    ],
+    "deny": []
+  }
+}
