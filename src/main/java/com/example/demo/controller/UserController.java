@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("/with-emails")
     public List<UserWithEmailsDto> getUsersWithEmails() {
         List<UserWithEmails> results = userDao.selectUserWithEmails();
-        return convertToDto(results);
+        return toDto(results);
     }
 
     @GetMapping("/{id}/with-emails")
@@ -49,11 +49,11 @@ public class UserController {
         if (results.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<UserWithEmailsDto> dtos = convertToDto(results);
+        List<UserWithEmailsDto> dtos = toDto(results);
         return ResponseEntity.ok(dtos.get(0));
     }
 
-    private List<UserWithEmailsDto> convertToDto(List<UserWithEmails> results) {
+    private List<UserWithEmailsDto> toDto(List<UserWithEmails> results) {
         Map<Long, UserWithEmailsDto.Builder> builders = new LinkedHashMap<>();
         
         for (UserWithEmails ue : results) {
