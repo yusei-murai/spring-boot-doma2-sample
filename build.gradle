@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.8'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
@@ -26,11 +26,12 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.7.0'
-    implementation 'org.seasar.doma:doma-slf4j:2.58.0'
+    implementation 'org.seasar.doma.boot:doma-spring-boot-starter:2.4.0'
+    implementation 'org.seasar.doma:doma-core:3.11.0'
+    implementation 'org.seasar.doma:doma-slf4j:3.11.0'
     implementation 'mysql:mysql-connector-java:8.0.33'
     
-    annotationProcessor 'org.seasar.doma:doma-processor:2.58.0'
+    annotationProcessor 'org.seasar.doma:doma-processor:3.11.0'
     
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

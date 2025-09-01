@@ -4,6 +4,8 @@ import com.example.demo.dao.UserDao;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserWithEmails;
 import com.example.demo.dto.UserWithEmailsDto;
+import com.example.demo.dto.CreateUserRequest;
+import com.example.demo.service.UserAggregateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private UserAggregateService userAggregateService;
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -38,31 +43,27 @@ public class UserController {
     }
 
     @GetMapping("/with-emails")
-    public List<UserWithEmailsDto> getUsersWithEmails() {
-        List<UserWithEmails> results = userDao.selectUserWithEmails();
-        return toDto(results);
+    public List<User> getUsersWithEmails() {
+        return userDao.selectUserWithEmails();
     }
 
     @GetMapping("/{id}/with-emails")
-    public ResponseEntity<UserWithEmailsDto> getUserWithEmailsById(@PathVariable Long id) {
-        List<UserWithEmails> results = userDao.selectUserWithEmailsById(id);
+    public ResponseEntity<User> getUserWithEmailsById(@PathVariable Long id) {
+        List<User> results = userDao.selectUserWithEmailsById(id);
         if (results.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<UserWithEmailsDto> dtos = toDto(results);
-        return ResponseEntity.ok(dtos.get(0));
+        return ResponseEntity.ok(results.get(0));
     }
 
-    private List<UserWithEmailsDto> toDto(List<UserWithEmails> results) {
-        Map<Long, UserWithEmailsDto.Builder> builders = new LinkedHashMap<>();
-        
-        for (UserWithEmails ue : results) {
-            builders.computeIfAbsent(ue.userId(), k -> new UserWithEmailsDto.Builder(k))
-                   .addEmail(ue.emailId(), ue.emailMail());
-        }
-        
-        return builders.values().stream()
-                      .map(UserWithEmailsDto.Builder::build)
-                      .collect(Collectors.toList());
+    @PostMapping("/with-emails")
+    public ResponseEntity<User> createUserWithEmails(@RequestBody CreateUserRequest request) {
+        User userAggregate = userAggregateService.createUserWithEmails(
+            request.name(), 
+            request.email(), 
+            request.emailAddresses()
+        );
+        return ResponseEntity.ok(userAggregate);
     }
+
 }
