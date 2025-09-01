@@ -1,6 +1,6 @@
 # Spring Boot + Doma2 サンプルプロジェクト
 
-Spring BootでDoma2を使用したCRUD操作のサンプルプロジェクトです。
+Spring BootでDoma2を使用したCRUD操作のサンプルプロジェクト
 
 ## 使用技術
 
@@ -21,51 +21,16 @@ docker-compose up -d
 ### 2. アプリケーションの起動
 
 ```bash
-mvn clean compile
-mvn spring-boot:run
+./gradlew bootRun  
 ```
 
-## API一覧
+## API
 
 ### 全ユーザー取得
 ```bash
-curl http://localhost:8080/api/users
+curl [http://localhost:8080/api/users](http://localhost:8080/api/users/with-emails)
 ```
 
-### 指定ユーザー取得（ID）
-```bash
-curl http://localhost:8080/api/users/1
-```
-
-### 指定ユーザー取得（Email）
-```bash
-curl http://localhost:8080/api/users/email/tanaka@example.com
-```
-
-### ユーザー作成
-```bash
-curl -X POST http://localhost:8080/api/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "山田太郎",
-    "email": "yamada@example.com"
-  }'
-```
-
-### ユーザー更新
-```bash
-curl -X PUT http://localhost:8080/api/users/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "田中次郎",
-    "email": "tanaka-updated@example.com"
-  }'
-```
-
-### ユーザー削除
-```bash
-curl -X DELETE http://localhost:8080/api/users/1
-```
 
 ## プロジェクト構成
 
