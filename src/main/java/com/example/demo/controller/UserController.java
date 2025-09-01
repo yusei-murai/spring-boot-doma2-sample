@@ -48,7 +48,7 @@ public class UserController {
     public List<UserOutputDto> getUsersWithEmails() {
         List<User> users = userDao.selectUserWithEmails();
         return users.stream()
-            .map(this::convertToOutputDto)
+            .map(this::toDTO)
             .collect(Collectors.toList());
     }
 
@@ -58,7 +58,7 @@ public class UserController {
         if (results.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(convertToOutputDto(results.get(0)));
+        return ResponseEntity.ok(toDTO(results.get(0)));
     }
 
     @PostMapping("/with-emails")
@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(userAggregate);
     }
     
-    private UserOutputDto convertToOutputDto(User user) {
+    private UserOutputDto toDTO(User user) {
         List<EmailOutputDto> emailDtos = user.emails().stream()
             .map(email -> new EmailOutputDto(email.id(), email.mail()))
             .collect(Collectors.toList());
